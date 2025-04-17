@@ -1,9 +1,9 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Services\TicketService;
-use Illuminate\Http\Request;
+use App\Http\Requests\TicketRequest;
+use Illuminate\Http\JsonResponse;
 
 class TicketController extends Controller
 {
@@ -15,60 +15,39 @@ class TicketController extends Controller
     }
 
     // Get all tickets
-    public function index()
+    public function index(): JsonResponse
     {
-        return response()->json($this->ticketService->getAllTickets(), 200);
+        $tickets = $this->ticketService->getAllTickets();
+        return response()->json($tickets, 200);
     }
 
-    // Get a single ticket by ID
-    public function show($id)
+    // Get a single ticket by ID or Freshdesk ID
+    public function show($id): JsonResponse
     {
-        return response()->json($this->ticketService->getTicketById($id), 200);
+        $ticket = $this->ticketService->getTicket($id);
+        return response()->json($ticket, 200);
     }
 
     // Create a new ticket
-    public function store(Request $request)
+    public function store(TicketRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'ticket_link' => 'required|url',           // Validate ticket link
-            'category' => 'required|string',           // Validate category
-            'status' => 'required|string',             // Validate status
-            'ticket_date' => 'required|date',          // Validate ticket date
-            'agent' => 'required|string',              // Validate agent
-            'solved_by' => 'required|string',          // Validate solved_by (required)
-            'last_reminder' => 'nullable|string',      // Validate last reminder (nullable)
-            'comments' => 'nullable|string',           // Validate comments (nullable)
-        ]);
-    
-        // Use the TicketService for creating the ticket
-        $ticket = $this->ticketService->createTicket($validated);
-
-        return response()->json($ticket, 201);  // Return the created ticket as JSON with HTTP status 201
+        // The validation has already been handled in TicketRequest
+        $ticket = $this->ticketService->createTicket($request->validated());
+        return response()->json($ticket, 201);  // Created status
     }
 
-    // Update an existing ticket
-    public function update(Request $request, $id)
+    // Update a ticket
+    public function update(TicketRequest $request, $id): JsonResponse
     {
-        $validated = $request->validate([
-            'ticket_link' => 'required|url',          // Validate ticket link
-            'category' => 'required|string',          // Validate category
-            'status' => 'required|string',            // Validate status
-            'ticket_date' => 'required|date',         // Validate ticket date
-            'agent' => 'required|string',             // Validate agent
-            'solved_by' => 'required|string',         // Validate solved_by (required)
-            'last_reminder' => 'nullable|string',     // Validate last reminder (nullable)
-            'comments' => 'nullable|string',          // Validate comments (nullable)
-        ]);
-
-        // Use the TicketService to update the ticket
-        $ticket = $this->ticketService->updateTicket($id, $validated);
+        // The validation has already been handled in TicketRequest
+        $ticket = $this->ticketService->updateTicket($id, $request->validated());
         return response()->json($ticket, 200);
     }
 
     // Delete a ticket
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
         $this->ticketService->deleteTicket($id);
-        return response()->json(null, 204);
+        return response()->json(null, 204);  // No content status
     }
 }
