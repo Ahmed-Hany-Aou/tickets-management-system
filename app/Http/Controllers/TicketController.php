@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Services\TicketService;
@@ -31,7 +32,6 @@ class TicketController extends Controller
     // Create a new ticket
     public function store(TicketRequest $request): JsonResponse
     {
-        // The validation has already been handled in TicketRequest
         $ticket = $this->ticketService->createTicket($request->validated());
         return response()->json($ticket, 201);  // Created status
     }
@@ -39,7 +39,6 @@ class TicketController extends Controller
     // Update a ticket
     public function update(TicketRequest $request, $id): JsonResponse
     {
-        // The validation has already been handled in TicketRequest
         $ticket = $this->ticketService->updateTicket($id, $request->validated());
         return response()->json($ticket, 200);
     }
