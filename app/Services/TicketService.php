@@ -3,6 +3,10 @@
 namespace App\Services;
 
 use App\Repositories\TicketRepository;
+use App\Helpers\MessageResponse;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Models\Ticket;
+
 
 class TicketService
 {
@@ -16,7 +20,7 @@ class TicketService
     // Get all tickets
     public function getAllTickets()
     {
-        return $this->ticketRepository->getAllTickets();
+        return $this->ticketRepository->getAllTickets(); // Delegate to the repository
     }
 
     // Get a single ticket by ID or Freshdesk ID
