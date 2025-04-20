@@ -24,12 +24,24 @@ Route::prefix('tickets')->group(function() {
     // Get all tickets
     Route::get('/', [TicketController::class, 'index']);
 
-    // Get a single ticket by ID
+
+
+
+    // Get a single ticket by ID or by Freshdesk ID
+    // This route will handle both cases: /tickets/{id} and /tickets/freshdesk/{id}
+    // where {id} can be either a database ID or a Freshdesk ticket ID
+    // The controller will determine how to handle the request based on the ID format
     Route::get('{id}', [TicketController::class, 'show']);
 
     // Update a ticket
     Route::put('{id}', [TicketController::class, 'update']);
 
-    // Delete a ticket
+
+    
+
+    // Delete a ticket single ticket by ID or by Freshdesk ID
+    // This route will handle both cases: /tickets/{id} and /tickets/freshdesk/{id}
+    // where {id} can be either a database ID or a Freshdesk ticket ID
+    // The controller will determine how to handle the request based on the ID format
     Route::delete('{id}', [TicketController::class, 'destroy']);
 });
