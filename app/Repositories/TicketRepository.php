@@ -10,7 +10,7 @@ class TicketRepository
     // Get all tickets
     public function getAllTickets()
     {
-        return Ticket::all();
+        return Ticket::all(); // Return all tickets, even if the collection is empty
     }
 
     // Get a single ticket by ID or Freshdesk ID
