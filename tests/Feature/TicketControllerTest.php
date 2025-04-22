@@ -28,8 +28,10 @@ class TicketControllerTest extends TestCase
                  ]);
     }
 
-    public function test_returns_error_when_no_tickets_are_found()
+   public function test_returns_error_when_no_tickets_are_found()
 {
+       // Empty the tickets table before the test
+       \DB::table('tickets')->delete();
     // Simulate the GET request to fetch all tickets when the database is empty
     $response = $this->getJson('/tickets');
 
@@ -39,7 +41,11 @@ class TicketControllerTest extends TestCase
                  'status' => 'error',
                  'message' => 'No tickets found.',
              ]);
+
+
+             
 }
+             
 
 
 
