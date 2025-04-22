@@ -4,9 +4,8 @@ namespace App\Services;
 
 use App\Repositories\TicketRepository;
 use App\Helpers\MessageResponse;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\Ticket;
-
+use Illuminate\Support\Collection; // Add this
 
 class TicketService
 {
@@ -18,30 +17,34 @@ class TicketService
     }
 
     // Get all tickets
-    public function getAllTickets()
+    public function getAllTickets(): Collection // Specify return type
     {
-        return $this->ticketRepository->getAllTickets(); // Delegate to the repository
+        return $this->ticketRepository->getAllTickets(); // Just return the Collection
     }
 
-    // Get a single ticket by ID or Freshdesk ID
+    // ... (other methods remain largely the same, but remove MessageResponse)
+
     public function getTicket($id)
     {
-        return $this->ticketRepository->getTicketByIdOrFreshdeskId($id);
+        $ticket = $this->ticketRepository->getTicketByIdOrFreshdeskId($id);
+
+        if (!$ticket) {
+            return null; // Return null if not found (or throw an exception, see below)
+        }
+
+        return $ticket;
     }
 
-    // Create a new ticket
     public function createTicket(array $data)
     {
         return $this->ticketRepository->createTicket($data);
     }
 
-    // Update an existing ticket
     public function updateTicket($id, array $data)
     {
         return $this->ticketRepository->updateTicket($id, $data);
     }
 
-    // Delete a ticket
     public function deleteTicket($id)
     {
         return $this->ticketRepository->deleteTicket($id);
