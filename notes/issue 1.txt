@@ -1,0 +1,16 @@
+The problem was that the TicketService was trying to handle HTTP responses, which is the job of the TicketController.
+
+Original Issue: The TicketService::getAllTickets() method was checking if there were no tickets and returning a MessageResponse object (which is just a data structure) instead of simply returning an empty collection of tickets. Then, the TicketController would take that MessageResponse and wrap it in a successful HTTP 200 response, even when there were no tickets. This caused the test to fail because it was expecting a 404 error response.
+The Solution:
+We changed TicketService::getAllTickets() to only return the result of fetching the tickets from the repository. If there are no tickets, it returns an empty collection. It does not create any HTTP responses or error messages.
+We updated the TicketController::index() method to check if the collection returned by the TicketService is empty. If it is, then the controller creates the 404 error response. If there are tickets, it creates the 200 success response.
+In essence, we moved the responsibility for creating the correct HTTP response from the Service to the Controller, which is where it belongs in a well-structured application.
+--------------------
+Merge pull request #9 from Ahmed-Hany-Aou/refactor/separate-response-from-service
+Ahmed-Hany-Aou
+Ahmed-Hany-Aou
+authored
+2 minutes ago
+Verified
+feat: Refactor TicketService::getAllTickets to return Collection
+-------------------
